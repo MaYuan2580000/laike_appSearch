@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { getCookie} from '../utlis/auth.js'
 //设置默认的请求格式
 axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 const service = axios.create({
@@ -10,7 +10,7 @@ const service = axios.create({
 service.interceptors.request.use(
     function(config) {
       // 在发送请求之前做些什么
-      config.headers['token'] = '121';
+      config.headers['token'] = getCookie();
       return config;
     },
     function(error) {

@@ -1,14 +1,15 @@
 <template>
-     <div class="comp_tab_tar" v-show="hidshow">
+     <div class="comp_tab_tar" >
          <ul >
-             <router-link v-for="(item,index) in tabList" :key="index" :to="item.path">
-             <li  @click="goTab(index)" 
-               :class="{ active:selected == index}">
+            
+             <li v-for="(item,index) in tabList" :key="index"
+                @click="switchTo(item.path)"
+               :class="{ active:item.path == $route.path}">
                  <!-- <i :class="item.iconFont"></i> -->
-                 <img :src="selected == index ? item.isActive :item.iconFont " alt class="imgList"/>
+                 <img :src="item.path == $route.path ? item.isActive :item.iconFont" alt />
                  {{item.title}}
              </li>
-             </router-link>
+            
          </ul>
      </div>
 </template>
@@ -17,46 +18,54 @@
 export default {
   name: "tabbar",
   
-  props: {
-    selectedActive: {
-      type: Number,
-      default: 0
-    },
-    tabList: {
-      type: Array,
-      default: []
-    }
-  },
+  // props: {
+  //   selectedActive: {
+  //     type: Number,
+  //     default: 0
+  //   },
+  //   tabList: {
+  //     type: Array,
+  //     default: []
+  //   }
+  // },
   data() {
     return {
-      selected: this.selectedActive,
-         docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
-        showHeight: document.documentElement.clientHeight,   //实时屏幕高度
-        hidshow:true  //显示或者隐藏footer
+      // selected: this.selectedActive,
+       tabList: [
+        {
+          title: "首页",
+          path: "/",
+          iconFont: require("@/assets/images/home.png"),
+          isActive: require("@/assets/images/home_active.png")
+        },
+        {
+          title: "全部分类",
+          path: "/classIfy",
+          iconFont: require("@/assets/images/category.png"),
+          isActive: require("@/assets/images/category_active.png")
+        },
+        {
+          title: "购物车",
+          path: "/shoppingCar",
+          iconFont: require("@/assets/images/cart.png"),
+          isActive: require("@/assets/images/cart_active.png")
+        },
+        {
+          title: "个人中心",
+          path: "/persoNal",
+          iconFont: require("@/assets/images/my.png"),
+          isActive: require("@/assets/images/my_active.png")
+        }
+      ]
     };
   },
   methods: {
-    goTab(index) {
-      this.selected = index;
+    switchTo(path){
+      this.$router.replace(`${path}`)
     }
   },
-    mounted() {
-    // window.onresize监听页面高度的变化
-    window.onresize = ()=>{
-        return(()=>{
-            this.showHeight = document.body.clientHeight;
-        })()
-    }
-  },
-  watch:{
-      showHeight:function() {
-        if(this.docmHeight > this.showHeight){
-            this.hidshow=false
-        }else{
-            this.hidshow=true
-        }
-      }
-      }}
+ 
+}
 </script>
 
 <style lang="less" scoped>
@@ -71,6 +80,11 @@ export default {
   height: 100%;
   height: 44px;
   bottom: 0.4rem;
+  z-index: 999;
+  img{
+    width: 1.8rem;
+    margin-bottom: 0.2rem;
+  }
   ul {
     position: relative;
   height: 100%;
@@ -98,7 +112,7 @@ ul li {
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  padding-top: 0.2rem;
+  padding-top: 0.3rem;
 
   align-items: center;
 }
